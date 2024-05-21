@@ -5,9 +5,9 @@ export const PROJECT_STATUS_CLASS_MAP = {
 }
 
 export const PROJECT_STATUS_TEXT_MAP = {
-  'pending': 'Pending',
-  'in_progress': 'In Progress',
-  'completed': 'Completed',
+  'pending': 'En Attente',
+  'in_progress': 'En Cours',
+  'completed': 'Terminé',
 }
 
 export const TASK_STATUS_CLASS_MAP = {
@@ -17,9 +17,9 @@ export const TASK_STATUS_CLASS_MAP = {
 }
 
 export const TASK_STATUS_TEXT_MAP = {
-  'pending': 'Pending',
-  'in_progress': 'In Progress',
-  'completed': 'Completed',
+  'pending': 'En Attente',
+  'in_progress': 'En Cours',
+  'completed': 'Terminé',
 }
 
 export const TASK_PRIORITY_CLASS_MAP = {
@@ -29,7 +29,7 @@ export const TASK_PRIORITY_CLASS_MAP = {
 }
 
 export const TASK_PRIORITY_TEXT_MAP = {
-  'low': 'Low',
+  'low': 'Faible',
   'medium': 'Medium',
-  'high': 'High',
+  'high': 'Haute',
 }
