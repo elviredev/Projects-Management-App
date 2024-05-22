@@ -4,6 +4,7 @@ import Pagination from "@/Components/Pagination.jsx";
 import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx";
 import TextInput from "@/Components/TextInput.jsx";
 import SelectInput from "@/Components/SelectInput.jsx";
+import TableHeading from "@/Components/TableHeading.jsx";
 
 export default function Index({ auth, projects, queryParams = null }) {
 
@@ -31,7 +32,27 @@ export default function Index({ auth, projects, queryParams = null }) {
    */
   const onKeyPress = (name, e) => {
     if (e.key !== 'Enter') return;
+
     searchFieldChanged(name, e.target.value)
+  }
+
+  /**
+   * Fonction de tri des entêtes du tableau
+   * @param {string} name
+   */
+  const sortChanged = (name) => {
+    if (name === queryParams.sort_field) {
+      if (queryParams.sort_direction === 'asc') {
+        queryParams.sort_direction = 'desc'
+      } else {
+        queryParams.sort_direction = 'asc'
+      }
+    } else {
+      queryParams.sort_field = name
+      queryParams.sort_direction = 'asc'
+    }
+
+    router.get(route('project.index'), queryParams)
   }
 
   return (
@@ -51,12 +72,37 @@ export default function Index({ auth, projects, queryParams = null }) {
                 <thead
                   className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                 <tr className="text-nowrap">
-                  <th className="px-3 py-3">ID</th>
+                  <TableHeading
+                    name="id"
+                    sort_field={queryParams.sort_field}
+                    sort_direction={queryParams.sort_direction}
+                    sortChanged={sortChanged}
+                  >id</TableHeading>
                   <th className="px-3 py-3">Image</th>
-                  <th className="px-3 py-3">Nom</th>
-                  <th className="px-3 py-3">Statut</th>
-                  <th className="px-3 py-3">Date Création</th>
-                  <th className="px-3 py-3">Date Echéance</th>
+                  <TableHeading
+                    name="name"
+                    sort_field={queryParams.sort_field}
+                    sort_direction={queryParams.sort_direction}
+                    sortChanged={sortChanged}
+                  >name</TableHeading>
+                  <TableHeading
+                    name="status"
+                    sort_field={queryParams.sort_field}
+                    sort_direction={queryParams.sort_direction}
+                    sortChanged={sortChanged}
+                  >statut</TableHeading>
+                  <TableHeading
+                    name="created_at"
+                    sort_field={queryParams.sort_field}
+                    sort_direction={queryParams.sort_direction}
+                    sortChanged={sortChanged}
+                  >date création</TableHeading>
+                  <TableHeading
+                    name="due_date"
+                    sort_field={queryParams.sort_field}
+                    sort_direction={queryParams.sort_direction}
+                    sortChanged={sortChanged}
+                  >date echéance</TableHeading>
                   <th className="px-3 py-3">Créé par</th>
                   <th className="px-3 py-3 text-right">Actions</th>
                 </tr>
