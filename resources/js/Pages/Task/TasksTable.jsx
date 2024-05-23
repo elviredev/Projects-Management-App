@@ -74,6 +74,7 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
     }
   }
 
+
   return (
     <>
       <div className="overflow-auto">
@@ -161,12 +162,16 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
               <td className="px-3 py-2">
                 <img src={task.image_path} style={{width: 60}} alt={task.name}/>
               </td>
-              {!hideProjectColumn && <td className="px-3 py-2">{task.project.name}</td>}
-              <td className="px-3 py-2">{task.name}</td>
+              {!hideProjectColumn &&
+                <td className="px-3 py-2 text-nowrap">
+                  {`${task.project.name.slice(0,12)}...`}
+                </td>
+              }
+              <td className="px-3 py-2 ">{task.name}</td>
               <td className="px-3 py-2">
                           <span
                             className={
-                              "px-1 py-1 rounded text-white text-nowrap " +
+                              "px-3 py-1 rounded text-white text-nowrap " +
                               TASK_STATUS_CLASS_MAP[task.status]
                             }
                           >
