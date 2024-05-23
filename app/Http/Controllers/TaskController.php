@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -13,7 +14,37 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $query = Task::query();
+
+        /**
+         * Sorting Projects
+         */
+        $sortField = request("sort_field", 'created_at');
+        $sortDirection = request("sort_direction", "desc");
+
+        /**
+         * Search by name & status
+         */
+        if (request("name")) {
+            $query->where('name', 'like', '%' . request("name") . '%');
+        }
+
+        if (request("status")) {
+            $query->where('status', request("status"));
+        }
+
+        /**
+         * Pagination
+         */
+        $tasks = $query->orderBy($sortField, $sortDirection)
+            ->paginate(10)
+            ->withQueryString()
+            ->onEachSide(1);
+
+        return inertia('Task/Index', [
+            "tasks" => TaskResource::collection($tasks),
+            "queryParams" => request()->query() ?: null
+        ]);
     }
 
     /**
