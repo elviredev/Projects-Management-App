@@ -5,8 +5,9 @@ import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx
 import TextInput from "@/Components/TextInput.jsx";
 import SelectInput from "@/Components/SelectInput.jsx";
 import TableHeading from "@/Components/TableHeading.jsx";
+import SuccessMessage from "@/Components/SuccessMessage.jsx";
 
-export default function Index({ auth, projects, queryParams = null }) {
+export default function Index({ auth, projects, queryParams = null, success }) {
 
   queryParams = queryParams || {}
 
@@ -55,16 +56,45 @@ export default function Index({ auth, projects, queryParams = null }) {
     router.get(route('project.index'), queryParams)
   }
 
+  /**
+   * Supprimer un projet
+   * @param project
+   */
+  const deleteProject = (project) => {
+    if (!window.confirm("Souhaitez-vous vraiment supprimer ce projet ❌ ?")) {
+      return;
+    }
+
+    router.delete(route('project.destroy', project.id))
+  }
+
   return (
     <AuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Projets</h2>}
+      header={
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Mes Projets
+          </h2>
+          <Link
+            href={route('project.create')}
+            className="bg-emerald-500 px-3 py-1 text-white rounded shadow transition-all hover:bg-emerald-600"
+          >
+            Ajouter Projet
+          </Link>
+        </div>
+
+      }
     >
 
-      <Head title="Projets" />
+      <Head title="Projets"/>
 
-      <div className="py-12 flex flex-col">
+      <div className="py-24 flex flex-col relative">
         <div className="overflow-x-auto w-full mx-auto sm:px-6 lg:px-8">
+          {/* Message de succès avec délai d'affichage de 3 sec */}
+          {success && (
+              <SuccessMessage message={success} />
+          )}
           <div className="inline-block bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg lg:flex lg:flex-col">
             <div className="p-6 text-gray-900 dark:text-gray-100 overflow-hidden">
 
@@ -168,19 +198,17 @@ export default function Index({ auth, projects, queryParams = null }) {
                     <td className="px-3 py-2 text-nowrap">{project.created_at}</td>
                     <td className="px-3 py-2 text-nowrap">{project.due_date}</td>
                     <td className="px-3 py-2">{project.createdBy.name}</td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2 text-nowrap">
                       <Link
                         href={route('project.edit', project.id)}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                       >
                         Modif.
                       </Link>
-                      <Link
-                        href={route('project.destroy', project.id)}
+                      <button
+                        onClick={e => deleteProject(project)}
                         className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
-                      >
-                        Suppr.
-                      </Link>
+                      >Suppr.</button>
                     </td>
                   </tr>
                 ))}

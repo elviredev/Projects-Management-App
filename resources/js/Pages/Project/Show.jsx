@@ -16,6 +16,7 @@ export default function Show({auth, project, tasks, queryParams}) {
     >
       <Head title={`Projet "${project.name}"`}/>
 
+      {/* Partie Infos Projet */}
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 shadow-sm overflow-hidden sm:rounded-lg">
@@ -23,7 +24,7 @@ export default function Show({auth, project, tasks, queryParams}) {
               <img
                 src={project.image_path}
                 alt=""
-                className="w-full h-64 object-cover"
+                className="w-full h-80 object-cover"
               />
             </div>
             <div className="p-6 text-gray-900 dark:text-gray-200">
@@ -83,16 +84,22 @@ export default function Show({auth, project, tasks, queryParams}) {
         </div>
       </div>
 
+      {/* Partie Tableau Tâches */}
       <div className="pb-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-800 shadow-sm overflow-hidden sm:rounded-lg">
             <div className="p-6 text-gray-900 dark:text-gray-200">
-              <TasksTable
-                tasks={tasks}
-                queryParams={queryParams}
-                hideProjectColumn={true}
-                project={project}
-              />
+              { tasks.data.length === 0 ? (
+                <h1>Il n'y a aucune tâche pour ce projet.</h1>
+              ) : (
+                <TasksTable
+                  tasks={tasks}
+                  queryParams={queryParams}
+                  hideProjectColumn={true}
+                  project={project}
+                />
+              )}
+
             </div>
           </div>
         </div>
