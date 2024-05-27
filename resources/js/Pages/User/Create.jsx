@@ -7,7 +7,7 @@ import InputError from "@/Components/InputError.jsx";
 export default function Create({auth}) {
 
   // variables Inertia pour travailler avec les formualires
-  const {data, setData, post, errors, reset} = useForm({
+  const {data, setData, post, errors} = useForm({
     name: '',
     email: '',
     password: '',

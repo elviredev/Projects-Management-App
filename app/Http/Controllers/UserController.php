@@ -6,7 +6,6 @@ use App\Http\Resources\UserCrudResource;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -54,7 +53,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return inertia('User/Create', []);
+        return inertia('User/Create');
     }
 
     /**
@@ -110,7 +109,7 @@ class UserController extends Controller
         $user->update($data);
 
         return to_route('user.index')
-            ->with('success', "L'utilisateur {$user->name} a bien été modifié 🙂");
+            ->with('success', "L'utilisateur $user->name a bien été modifié 🙂");
     }
 
     /**
@@ -123,6 +122,6 @@ class UserController extends Controller
         $user->delete();
 
         return to_route('user.index')
-            ->with('success', "L'utilisateur {$name} a bien été supprimé 👍🏼");
+            ->with('success', "L'utilisateur $name a bien été supprimé 👍🏼");
     }
 }

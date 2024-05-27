@@ -58,7 +58,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return inertia('Project/Create', []);
+        return inertia('Project/Create');
     }
 
     /**
@@ -155,7 +155,7 @@ class ProjectController extends Controller
         $project->update($data);
 
         return to_route('project.index')
-            ->with('success', "Le projet {$project->name} a bien été modifié 🙂");
+            ->with('success', "Le projet $project->name a bien été modifié 🙂");
     }
 
     /**
@@ -181,6 +181,6 @@ class ProjectController extends Controller
         $project->delete();
 
         return to_route('project.index')
-            ->with('success', "Le projet {$name} a bien été supprimé 👍🏼");
+            ->with('success', "Le projet $name a bien été supprimé 👍🏼");
     }
 }

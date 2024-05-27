@@ -2,14 +2,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import {Head, Link, useForm} from "@inertiajs/react";
 import InputLabel from "@/Components/InputLabel.jsx";
 import TextInput from "@/Components/TextInput.jsx";
-import TextAreaInput from "@/Components/TextAreaInput.jsx";
 import InputError from "@/Components/InputError.jsx";
-import SelectInput from "@/Components/SelectInput.jsx";
 
 export default function Edit({auth, user}) {
 
   // variables Inertia pour travailler avec les formualires
-  const {data, setData, post, errors, reset} = useForm({
+  const {data, setData, post, errors} = useForm({
     name: user.name || '',
     email: user.email || '',
     password: '',
