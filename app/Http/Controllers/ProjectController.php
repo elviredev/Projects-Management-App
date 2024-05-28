@@ -89,6 +89,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        // Enregistrer l'URL précédente
+        session(['url.intended' => url()->current()]);
+
         $query = $project->tasks();
 
         /**
@@ -117,7 +120,8 @@ class ProjectController extends Controller
         return inertia('Project/Show', [
             "project" => new ProjectResource($project),
             "tasks" => TaskResource::collection($tasks),
-            "queryParams" => request()->query() ?: null
+            "queryParams" => request()->query() ?: null,
+            'success' => session('success')
         ]);
     }
 
@@ -155,7 +159,7 @@ class ProjectController extends Controller
         $project->update($data);
 
         return to_route('project.index')
-            ->with('success', "Le projet $project->name a bien été modifié 🙂");
+            ->with('success', "Le projet \"$project->name\" a bien été modifié 🙂");
     }
 
     /**
@@ -181,6 +185,6 @@ class ProjectController extends Controller
         $project->delete();
 
         return to_route('project.index')
-            ->with('success', "Le projet $name a bien été supprimé 👍🏼");
+            ->with('success', "Le projet \"$name\" a bien été supprimé 👍🏼");
     }
 }

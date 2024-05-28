@@ -28,6 +28,12 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
       return;
     }
 
+    // Vérifie et appelle la route 'task.myTasks' si elle existe
+    if (route().current('task.myTasks')) {
+      router.get(route('task.myTasks'), queryParams)
+      return;
+    }
+
     // Vérifie que 'project' est défini et appelle la route 'project.show' si elle existe
     if (project && project.id && route().current('project.show', {project: project.id})) {
       router.get(route('project.show', {project: project.id}), queryParams)
@@ -68,12 +74,29 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
       return;
     }
 
+    // Vérifie et appelle la route 'task.myTasks' si elle existe
+    if (route().current('task.myTasks')) {
+      router.get(route('task.myTasks'), queryParams)
+      return;
+    }
+
     // Vérifie que 'project' est défini et appelle la route 'project.show' si elle existe
     if (project && project.id && route().current('project.show', {project: project.id})) {
       router.get(route('project.show', {project: project.id}), queryParams)
     }
   }
 
+  /**
+   * Supprimer une tâche
+   * @param task
+   */
+  const deleteTask = (task) => {
+    if (!window.confirm("Souhaitez-vous vraiment supprimer cette tâche ❌ ?")) {
+      return;
+    }
+
+    router.delete(route('task.destroy', task.id))
+  }
 
   return (
     <>
@@ -167,7 +190,11 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
                   {`${task.project.name.slice(0,12)}...`}
                 </td>
               }
-              <td className="px-3 py-2 ">{task.name}</td>
+              <th className="px-3 py-2 text-gray-100 hover:underline">
+                <Link href={route("task.show", task.id)}>
+                  {task.name}
+                </Link>
+              </th>
               <td className="px-3 py-2">
                           <span
                             className={
@@ -181,19 +208,19 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
               <td className="px-3 py-2 text-nowrap">{task.created_at}</td>
               <td className="px-3 py-2 text-nowrap">{task.due_date}</td>
               <td className="px-3 py-2">{task.createdBy.name}</td>
-              <td className="px-3 py-2">
+              <td className="px-3 py-2 text-nowrap">
                 <Link
                   href={route('task.edit', task.id)}
                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                 >
                   Modif.
                 </Link>
-                <Link
-                  href={route('task.destroy', task.id)}
+                <button
+                  onClick={() => deleteTask(task)}
                   className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                 >
                   Suppr.
-                </Link>
+                </button>
               </td>
             </tr>
           ))}

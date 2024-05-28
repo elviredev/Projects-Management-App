@@ -2,8 +2,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import {Head} from "@inertiajs/react";
 import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx";
 import TasksTable from "@/Pages/Task/TasksTable.jsx";
+import SuccessMessage from "@/Components/SuccessMessage.jsx";
 
-export default function Show({auth, project, tasks, queryParams}) {
+export default function Show({auth, project, tasks, queryParams, success}) {
 
   return (
     <AuthenticatedLayout
@@ -17,8 +18,12 @@ export default function Show({auth, project, tasks, queryParams}) {
       <Head title={`Projet "${project.name}"`}/>
 
       {/* Partie Infos Projet */}
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="py-24 max-w-7xl mx-auto relative">
+        <div className="overflow-x-auto max-w-7xl sm:px-6 lg:px-8">
+          {/* Message de succès avec délai d'affichage de 3 sec */}
+          {success && (
+            <SuccessMessage message={success} />
+          )}
           <div className="bg-white dark:bg-gray-800 shadow-sm overflow-hidden sm:rounded-lg">
             <div>
               <img
@@ -94,6 +99,7 @@ export default function Show({auth, project, tasks, queryParams}) {
               ) : (
                 <TasksTable
                   tasks={tasks}
+                  success={success}
                   queryParams={queryParams}
                   hideProjectColumn={true}
                   project={project}
