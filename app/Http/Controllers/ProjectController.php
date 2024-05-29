@@ -7,8 +7,10 @@ use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Str;
 
@@ -169,22 +171,42 @@ class ProjectController extends Controller
     {
         $name = htmlspecialchars($project->name, ENT_QUOTES, 'UTF-8');
 
-        // Supprimer l'image associée si elle existe
-        if ($project->image_path) {
-            // Supprimer l'image
-            Storage::disk('public')->delete($project->image_path);
-            // Récupérer le chemin du dossier contenant l'image
-            $folderPath = dirname($project->image_path);
-            // Supprimer le répertoire s'il est vide
-            if (Storage::disk('public')->exists($folderPath) && count(Storage::disk('public')->allFiles($folderPath)) === 0) {
-                // Supprimer le répertoire
-                Storage::disk('public')->deleteDirectory($folderPath);
+        // Utiliser une transaction pour s'assurer que toutes les opérations sont effectuées ou aucune
+        DB::beginTransaction();
+        try {
+            // Supprimer les tâches associées au projet
+            $project->tasks()->delete();
+
+            // Supprimer l'image associée si elle existe
+            if ($project->image_path) {
+                // Supprimer l'image
+                Storage::disk('public')->delete($project->image_path);
+                // Récupérer le chemin du dossier contenant l'image
+                $folderPath = dirname($project->image_path);
+                // Supprimer le répertoire s'il est vide
+                if (Storage::disk('public')->exists($folderPath) && count(Storage::disk('public')->allFiles($folderPath)) === 0) {
+                    // Supprimer le répertoire
+                    Storage::disk('public')->deleteDirectory($folderPath);
+                }
             }
+
+            // Supprimer le projet
+            $project->delete();
+
+            // Confirmer la transaction
+            DB::commit();
+
+            return to_route('project.index')
+                ->with('success', "Le projet \"$name\" a bien été supprimé 👍🏼");
+
+        } catch (QueryException $e) {
+            // Annuler la transaction en cas d'erreur
+            DB::rollBack();
+
+            // Rediriger vers une page d'erreur avec un message approprié
+            return to_route('project.index')
+                ->with('error', "Une erreur est survenue lors de la suppression du projet \"$name\". Assurez-vous que toutes les tâches associées sont supprimées.");
         }
-
-        $project->delete();
-
-        return to_route('project.index')
-            ->with('success', "Le projet \"$name\" a bien été supprimé 👍🏼");
     }
+
 }
