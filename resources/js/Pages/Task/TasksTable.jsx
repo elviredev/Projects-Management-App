@@ -196,14 +196,14 @@ export default function TasksTable({tasks, project, queryParams = null, hideProj
                 </Link>
               </th>
               <td className="px-3 py-2">
-                          <span
-                            className={
-                              "px-3 py-1 rounded text-white text-nowrap " +
-                              TASK_STATUS_CLASS_MAP[task.status]
-                            }
-                          >
-                            {TASK_STATUS_TEXT_MAP[task.status]}
-                          </span>
+                <span
+                  className={
+                    "px-3 py-1 rounded text-white text-nowrap " +
+                    TASK_STATUS_CLASS_MAP[task.status]
+                  }
+                >
+                  {TASK_STATUS_TEXT_MAP[task.status]}
+                </span>
               </td>
               <td className="px-3 py-2 text-nowrap">{task.created_at}</td>
               <td className="px-3 py-2 text-nowrap">{task.due_date}</td>
